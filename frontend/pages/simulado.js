@@ -1,72 +1,91 @@
-// frontend/pages/simulador.js
+// Caminho: frontend/pages/simulado.js
+import { useState } from 'react';
 
-import React, { useState } from 'react';
-
-const questaoExemplo = {
-  id: 1,
-  enunciado: "Qual é a função do princípio da legalidade no Direito Administrativo?",
-  alternativas: [
-    "Garantir a supremacia do interesse público.",
-    "Permitir à administração agir conforme sua conveniência.",
-    "Limitar a atuação da administração àquilo que está previsto em lei.",
-    "Atribuir poderes ilimitados à administração."
-  ],
-  correta: 2,
-  fundamentacao: "Art. 37 da CF/88: A administração pública direta e indireta de qualquer dos Poderes (...) obedecerá aos princípios de legalidade, impessoalidade, moralidade, publicidade e eficiência.",
-};
-
-export default function Simulador() {
+export default function SimuladoPage() {
+  const [questaoAtual, setQuestaoAtual] = useState(0);
   const [respostaSelecionada, setRespostaSelecionada] = useState(null);
-  const [respondido, setRespondido] = useState(false);
+  const [respostaCorreta] = useState('B'); // Simulação
+  const [statusResposta, setStatusResposta] = useState(null);
+  const [fundamentacao] = useState('Art. 5º, inciso II - ninguém será obrigado a fazer ou deixar de fazer alguma coisa senão em virtude de lei.');
 
-  const verificarResposta = () => {
-    setRespondido(true);
+  const questaoExemplo = {
+    enunciado: 'De acordo com a Constituição Federal, é correto afirmar que:',
+    alternativas: {
+      A: 'Todos são iguais perante a lei, exceto militares.',
+      B: 'Ninguém será obrigado a fazer ou deixar de fazer alguma coisa senão em virtude de lei.',
+      C: 'A liberdade de expressão pode ser proibida por lei ordinária.',
+      D: 'A casa é um local público durante o dia.'
+    }
   };
 
-  const corAlternativa = (index) => {
-    if (!respondido) return '';
-    if (index === questaoExemplo.correta) return 'bg-green-200';
-    if (index === respostaSelecionada) return 'bg-red-200';
-    return '';
+  const responder = (letra) => {
+    setRespostaSelecionada(letra);
+    setStatusResposta(letra === respostaCorreta ? 'acertou' : 'errou');
   };
 
   return (
-    <div className="max-w-2xl mx-auto mt-10 p-4 bg-white shadow rounded">
-      <h2 className="text-xl font-bold mb-4 text-center">Resolução de Questões</h2>
-
-      <p className="font-medium mb-4">{questaoExemplo.enunciado}</p>
-
-      <div className="space-y-2">
-        {questaoExemplo.alternativas.map((alt, index) => (
+    <div style={styles.container}>
+      <h1 style={styles.titulo}>Resolução de Questões</h1>
+      <div style={styles.card}>
+        <p><strong>Questão {questaoAtual + 1}:</strong> {questaoExemplo.enunciado}</p>
+        {Object.entries(questaoExemplo.alternativas).map(([letra, texto]) => (
           <button
-            key={index}
-            onClick={() => setRespostaSelecionada(index)}
-            className={`w-full text-left p-2 border rounded ${corAlternativa(index)} ${respostaSelecionada === index ? 'ring-2 ring-blue-400' : ''}`}
-            disabled={respondido}
+            key={letra}
+            onClick={() => responder(letra)}
+            style={{
+              ...styles.botao,
+              background: respostaSelecionada === letra ? (letra === respostaCorreta ? '#4CAF50' : '#F44336') : '#eee'
+            }}
           >
-            {alt}
+            <strong>{letra})</strong> {texto}
           </button>
         ))}
-      </div>
 
-      <div className="mt-4 flex justify-between">
-        <button className="bg-gray-300 px-4 py-2 rounded" disabled>Anterior</button>
-        <button
-          className="bg-blue-500 text-white px-4 py-2 rounded"
-          onClick={verificarResposta}
-          disabled={respostaSelecionada === null || respondido}
-        >
-          Responder
-        </button>
-        <button className="bg-gray-300 px-4 py-2 rounded" disabled>Próxima</button>
+        {statusResposta && (
+          <div style={styles.resultado}>
+            <p style={{ color: statusResposta === 'acertou' ? 'green' : 'red' }}>
+              Você {statusResposta === 'acertou' ? 'acertou!' : 'errou!'}
+            </p>
+            <p><strong>Fundamentação:</strong> {fundamentacao}</p>
+          </div>
+        )}
       </div>
-
-      {respondido && (
-        <div className="mt-6 bg-gray-100 p-4 rounded">
-          <p className="font-semibold text-green-700">Fundamentação:</p>
-          <p className="text-sm mt-1">{questaoExemplo.fundamentacao}</p>
-        </div>
-      )}
     </div>
   );
 }
+
+const styles = {
+  container: {
+    maxWidth: 800,
+    margin: '0 auto',
+    padding: 20,
+    fontFamily: 'Arial',
+  },
+  titulo: {
+    textAlign: 'center',
+    color: '#0057FF',
+  },
+  card: {
+    background: '#f9f9f9',
+    borderRadius: 10,
+    padding: 20,
+    boxShadow: '0 0 10px rgba(0,0,0,0.1)',
+  },
+  botao: {
+    display: 'block',
+    width: '100%',
+    padding: 10,
+    marginTop: 10,
+    borderRadius: 5,
+    border: '1px solid #ccc',
+    textAlign: 'left',
+    cursor: 'pointer',
+  },
+  resultado: {
+    marginTop: 20,
+    padding: 15,
+    borderTop: '1px solid #ccc',
+    background: '#fffbe6',
+    borderRadius: 8,
+  },
+};
