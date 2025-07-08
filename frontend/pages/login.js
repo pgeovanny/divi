@@ -1,28 +1,39 @@
-import { useState } from "react";
-import axios from "axios";
+// Arquivo: frontend/pages/login.js
 
-export default function Login() {
-  const [email, setEmail] = useState("");
-  const [senha, setSenha] = useState("");
-  const [msg, setMsg] = useState("");
+import React, { useState } from 'react';
 
-  async function handleLogin(e) {
-    e.preventDefault();
-    try {
-      const res = await axios.post("/api/auth/login", { email, senha });
-      setMsg("Login realizado!");
-    } catch {
-      setMsg("Usuário ou senha inválidos.");
-    }
-  }
+function LoginPage() {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
 
-  return (
-    <form style={{display:"flex",flexDirection:"column",gap:"1rem",maxWidth:400,margin:"4rem auto"}} onSubmit={handleLogin}>
-      <h2>Login</h2>
-      <input placeholder="Email" value={email} onChange={e=>setEmail(e.target.value)} required />
-      <input placeholder="Senha" type="password" value={senha} onChange={e=>setSenha(e.target.value)} required />
-      <button style={{background:"#0057FF",color:"#fff"}} type="submit">Entrar</button>
-      <span>{msg}</span>
-    </form>
-  )
+    const handleLogin = (e) => {
+        e.preventDefault();
+        // Lógica de autenticação aqui
+        console.log('Email:', email, 'Password:', password);
+    };
+
+    return (
+        <div>
+            <h1>Login Page</h1>
+            <form onSubmit={handleLogin}>
+                <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Email"
+                    required
+                />
+                <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Password"
+                    required
+                />
+                <button type="submit">Login</button>
+            </form>
+        </div>
+    );
 }
+
+export default LoginPage;
