@@ -1,5 +1,4 @@
 // frontend/pages/admin.js
-
 import { useState } from 'react';
 
 export default function AdminPage() {
@@ -7,10 +6,19 @@ export default function AdminPage() {
   const [nivel, setNivel] = useState('Fácil');
   const [lei, setLei] = useState('');
   const [questaoGerada, setQuestaoGerada] = useState('');
-  const [usuarios, setUsuarios] = useState([]);
+
+  const [novoUsuario, setNovoUsuario] = useState({
+    nome: '',
+    cpf: '',
+    email: '',
+    estado: '',
+    areaEstudo: '',
+    curso: '',
+    senha: '',
+    isAdmin: false,
+  });
 
   const gerarQuestao = () => {
-    // Aqui futuramente será chamada a API do GPT
     const comando = `Crie uma questão ${modalidade}, nível ${nivel}, com base na Lei ${lei}.`;
     setQuestaoGerada(`🔧 GPT gerará: ${comando}`);
   };
@@ -21,6 +29,12 @@ export default function AdminPage() {
 
   const exportar = () => {
     alert('Questão exportada com sucesso!');
+  };
+
+  const cadastrarUsuario = () => {
+    console.log('Usuário cadastrado:', novoUsuario);
+    alert('Usuário cadastrado com sucesso!');
+    // Aqui você pode integrar com o backend futuramente
   };
 
   return (
@@ -64,7 +78,65 @@ export default function AdminPage() {
 
       <div style={styles.box}>
         <h2>Cadastrar Novo Usuário</h2>
-        <p>[Área de cadastro de usuário será implementada aqui futuramente]</p>
+        <input
+          type="text"
+          placeholder="Nome completo"
+          value={novoUsuario.nome}
+          onChange={e => setNovoUsuario({ ...novoUsuario, nome: e.target.value })}
+          style={styles.input}
+        />
+        <input
+          type="text"
+          placeholder="CPF"
+          value={novoUsuario.cpf}
+          onChange={e => setNovoUsuario({ ...novoUsuario, cpf: e.target.value })}
+          style={styles.input}
+        />
+        <input
+          type="email"
+          placeholder="Email"
+          value={novoUsuario.email}
+          onChange={e => setNovoUsuario({ ...novoUsuario, email: e.target.value })}
+          style={styles.input}
+        />
+        <input
+          type="text"
+          placeholder="Estado (sigla)"
+          value={novoUsuario.estado}
+          onChange={e => setNovoUsuario({ ...novoUsuario, estado: e.target.value })}
+          style={styles.input}
+        />
+        <input
+          type="text"
+          placeholder="Área de Estudo"
+          value={novoUsuario.areaEstudo}
+          onChange={e => setNovoUsuario({ ...novoUsuario, areaEstudo: e.target.value })}
+          style={styles.input}
+        />
+        <input
+          type="text"
+          placeholder="Curso Preparatório"
+          value={novoUsuario.curso}
+          onChange={e => setNovoUsuario({ ...novoUsuario, curso: e.target.value })}
+          style={styles.input}
+        />
+        <input
+          type="password"
+          placeholder="Senha (mínimo 8 dígitos)"
+          value={novoUsuario.senha}
+          onChange={e => setNovoUsuario({ ...novoUsuario, senha: e.target.value })}
+          style={styles.input}
+        />
+        <label>
+          <input
+            type="checkbox"
+            checked={novoUsuario.isAdmin}
+            onChange={e => setNovoUsuario({ ...novoUsuario, isAdmin: e.target.checked })}
+          />
+          {' '}É administrador
+        </label>
+        <br /><br />
+        <button onClick={cadastrarUsuario} style={styles.btn}>Cadastrar Usuário</button>
       </div>
     </div>
   );
@@ -121,4 +193,4 @@ const styles = {
     borderRadius: 8,
     marginTop: 20,
   },
-};
+}
